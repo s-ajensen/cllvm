@@ -1,5 +1,5 @@
 exp := lit;
-lit := str | num |char | nil | bool;
+lit := str | num |char | nil | bool | kw;
 
 str := #"\"[^\"]*\"";
 
@@ -23,3 +23,5 @@ char_named := '\\newline' | '\\return' | '\\space' | '\\tab' | '\\formfeed' | '\
 nil := 'nil'
 
 bool := 'true' | 'false'
+
+kw := #":[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*"

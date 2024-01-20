@@ -1,6 +1,10 @@
 (ns cllvm.parser-spec
   (:require [speclj.core :refer :all]
-            [cllvm.parser :as sut]))
+            [cllvm.parser :as sut])
+  (:import (instaparse.gll Failure)))
+
+(defn should-fail-parse [form]
+  (should (instance? Failure form)))
 
 ;region clojure parser
 (describe "Clojure parser"
@@ -222,6 +226,30 @@
         (it "false"
           (should= [:exp [:lit [:bool "false"]]]
             (sut/parse "false")))
+        )                                                   ;endregion
+      ;region keyword
+      (context "keyword"
+
+        (it "starts with colon"
+          (should= [:exp [:lit [:kw ":key"]]]
+            (sut/parse ":key")))
+
+        (it "forbidden characters"
+          (should-fail-parse (sut/parse ":1"))
+          (should-fail-parse (sut/parse ":^"))
+          (should-fail-parse (sut/parse ":\\"))
+          (should-fail-parse (sut/parse ":\""))
+          (should-fail-parse (sut/parse ":#"))
+          (should-fail-parse (sut/parse ":~"))
+          (should-fail-parse (sut/parse ":@"))
+          (should-fail-parse (sut/parse ":("))
+          (should-fail-parse (sut/parse ":)"))
+          (should-fail-parse (sut/parse ":["))
+          (should-fail-parse (sut/parse ":]"))
+          (should-fail-parse (sut/parse ":{"))
+          (should-fail-parse (sut/parse ":}"))
+          (should-fail-parse (sut/parse ": "))
+          (should-fail-parse (sut/parse ":,")))
         )                                                   ;endregion
       )                                                     ;endregion
     )                                                       ;endregion

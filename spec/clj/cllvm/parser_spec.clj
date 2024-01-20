@@ -166,6 +166,46 @@
               (sut/parse "-10r001")))
           )                                                 ;endregion
         )                                                   ;endregion
+
+      (context "character"
+
+        (it "single"
+          (should= [:exp [:lit [:char "\\a"]]]
+            (sut/parse "\\a")))
+
+        (it "unicode"
+          (should= [:exp [:lit [:char [:char_uni "\\u1F4A"]]]]
+            (sut/parse "\\u1F4A")))
+
+        (it "octal"
+          (should= [:exp [:lit [:char [:char_oct "\\o123"]]]]
+            (sut/parse "\\o123")))
+
+        (context "named"
+
+          (it "newline"
+            (should= [:exp [:lit [:char [:char_named "\\newline"]]]]
+              (sut/parse "\\newline")))
+
+          (it "newline"
+            (should= [:exp [:lit [:char [:char_named "\\space"]]]]
+              (sut/parse "\\space")))
+
+          (it "newline"
+            (should= [:exp [:lit [:char [:char_named "\\tab"]]]]
+              (sut/parse "\\tab")))
+
+          (it "newline"
+            (should= [:exp [:lit [:char [:char_named "\\formfeed"]]]]
+              (sut/parse "\\formfeed")))
+
+          (it "newline"
+            (should= [:exp [:lit [:char [:char_named "\\backspace"]]]]
+              (sut/parse "\\backspace")))
+
+          (it "newline"
+            (should= [:exp [:lit [:char [:char_named "\\return"]]]]
+              (sut/parse "\\return")))))
       )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

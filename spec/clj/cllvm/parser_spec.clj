@@ -73,7 +73,7 @@
               (should= [:exp [:lit [:num [:double "1.0e-23"]]]]
                 (sut/parse "1.0e-23"))))                    ;endregion
           )                                                 ;endregion
-        ;region ration
+        ;region ratio
         (context "ratio"
 
           (context "positive numerator"
@@ -125,6 +125,24 @@
           (it "negative"
             (should= [:exp [:lit [:num [:hex "-0x123"]]]]
               (sut/parse "-0x123"))))                       ;endregion
+        ;region radix
+        (context "radix"
+          (it "base2"
+            (should= [:exp [:lit [:num [:radix "2r0110"]]]]
+              (sut/parse "2r0110")))
+
+          (it "base10"
+            (should= [:exp [:lit [:num [:radix "10r001"]]]]
+              (sut/parse "10r001")))
+
+          (it "base36"
+            (should= [:exp [:lit [:num [:radix "36rz123a"]]]]
+              (sut/parse "36rz123a")))
+
+          (it "negative"
+            (should= [:exp [:lit [:num [:radix "-10r001"]]]]
+              (sut/parse "-10r001")))
+          )                                                 ;endregion
         )                                                   ;endregion
       )                                                     ;endregion
     )                                                       ;endregion

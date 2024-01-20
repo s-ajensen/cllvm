@@ -8,3 +8,5 @@
 (defn parse
   ([parser code] (parser code))
   ([code] (grammar code)))
+
+; TODO: add semantic analysis step after parsing (for radix + whatever else)

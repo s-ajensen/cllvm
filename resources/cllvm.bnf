@@ -1,5 +1,5 @@
 exp := lit;
-lit := str | num |char | nil;
+lit := str | num |char | nil | bool;
 
 str := #"\"[^\"]*\"";
 
@@ -21,3 +21,5 @@ char_oct := #"\\o[0-7]{3,4}"
 char_named := '\\newline' | '\\return' | '\\space' | '\\tab' | '\\formfeed' | '\\backspace';
 
 nil := 'nil'
+
+bool := 'true' | 'false'

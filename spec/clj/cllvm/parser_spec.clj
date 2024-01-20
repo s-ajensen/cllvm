@@ -208,9 +208,21 @@
             (should= [:exp [:lit [:char [:char_named "\\return"]]]]
               (sut/parse "\\return")))))                    ;endregion
 
+      ;region nil
       (it "nil"
         (should= [:exp [:lit [:nil "nil"]]]
-          (sut/parse "nil")))
+          (sut/parse "nil")))                               ;endregion
+      ;region boolean
+      (context "boolean"
+
+        (it "true"
+          (should= [:exp [:lit [:bool "true"]]]
+            (sut/parse "true")))
+
+        (it "false"
+          (should= [:exp [:lit [:bool "false"]]]
+            (sut/parse "false")))
+        )                                                   ;endregion
       )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

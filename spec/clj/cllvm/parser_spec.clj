@@ -105,6 +105,28 @@
           (it "negative"
             (should= [:exp [:lit [:num [:bign "-123n"]]]]
               (sut/parse "-123n"))))                        ;endregion
+        ;region bigdecimal
+        (context "bigdecimal"
+
+          (it "positive"
+            (should= [:exp [:lit [:num [:bigdec "1.23M"]]]]
+              (sut/parse "1.23M")))
+
+          (it "negative"
+            (should= [:exp [:lit [:num [:bigdec "-1.23M"]]]]
+              (sut/parse "-1.23M")))
+
+          ;region scientific notation
+          (context "scientific notation"
+
+            (it "positive power"
+              (should= [:exp [:lit [:num [:bigdec "1.0e23M"]]]]
+                (sut/parse "1.0e23M")))
+
+            (it "negative power"
+              (should= [:exp [:lit [:num [:bigdec "1.0e-23M"]]]]
+                (sut/parse "1.0e-23M"))))                    ;endregion
+          )                                                 ;endregion
         ;region octal
         (context "octal"
 

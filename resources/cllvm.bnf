@@ -1,5 +1,5 @@
 exp := lit;
-lit := str | num |char;
+lit := str | num |char | nil;
 
 str := #"\"[^\"]*\"";
 
@@ -19,3 +19,5 @@ char := #"\\." | char_uni | char_oct | char_named;
 char_uni := #"\\u[0-9a-fA-F]{4}"
 char_oct := #"\\o[0-7]{3,4}"
 char_named := '\\newline' | '\\return' | '\\space' | '\\tab' | '\\formfeed' | '\\backspace';
+
+nil := 'nil'

@@ -167,6 +167,7 @@
           )                                                 ;endregion
         )                                                   ;endregion
 
+      ;region character
       (context "character"
 
         (it "single"
@@ -205,7 +206,11 @@
 
           (it "newline"
             (should= [:exp [:lit [:char [:char_named "\\return"]]]]
-              (sut/parse "\\return")))))
+              (sut/parse "\\return")))))                    ;endregion
+
+      (it "nil"
+        (should= [:exp [:lit [:nil "nil"]]]
+          (sut/parse "nil")))
       )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

@@ -2,12 +2,14 @@
   (:require [speclj.core :refer :all]
             [cllvm.parser :as sut]))
 
+;region clojure parser
 (describe "Clojure parser"
-
+  ;region expression
   (context "expression"
-
+    ;region literal
     (context "literal"
 
+      ;region string
       (context "string"
 
         (it "plain"
@@ -16,10 +18,11 @@
 
         (it "with escape characters"
           (should= [:exp [:lit [:str "\"test\n\""]]]
-            (sut/parse "\"test\n\""))))
+            (sut/parse "\"test\n\""))))                     ;endregion
 
+      ;region number
       (context "number"
-
+        ;region long
         (context "long"
 
           (it "positive"
@@ -32,8 +35,8 @@
 
           (it "with suffix"
             (should= [:exp [:lit [:num [:long "-123L"]]]]
-              (sut/parse "-123L"))))
-
+              (sut/parse "-123L"))))                        ;endregion
+        ;region double
         (context "double"
 
           (it "positive"
@@ -59,7 +62,7 @@
           (it "negative NaN"
             (should= [:exp [:lit [:num [:double "-NaN"]]]]
               (sut/parse "-NaN")))
-
+          ;region scientific notation
           (context "scientific notation"
 
             (it "positive power"
@@ -68,8 +71,9 @@
 
             (it "negative power"
               (should= [:exp [:lit [:num [:double "1.0e-23"]]]]
-                (sut/parse "1.0e-23")))))
-
+                (sut/parse "1.0e-23"))))                    ;endregion
+          )                                                 ;endregion
+        ;region ration
         (context "ratio"
 
           (context "positive numerator"
@@ -90,8 +94,8 @@
 
             (it "negative denominator"
               (should= [:exp [:lit [:num [:ratio "-1/-2"]]]]
-                (sut/parse "-1/-2")))))
-
+                (sut/parse "-1/-2")))))                     ;endregion
+        ;region bigint
         (context "bigint"
 
           (it "positive"
@@ -100,8 +104,8 @@
 
           (it "negative"
             (should= [:exp [:lit [:num [:bign "-123n"]]]]
-              (sut/parse "-123n"))))
-
+              (sut/parse "-123n"))))                        ;endregion
+        ;region octal
         (context "octal"
 
           (it "positive"
@@ -110,8 +114,8 @@
 
           (it "negative"
             (should= [:exp [:lit [:num [:octal "-012"]]]]
-              (sut/parse "-012"))))
-
+              (sut/parse "-012"))))                         ;endregion
+        ;region hexadecimal
         (context "hexadecimal"
 
           (it "positive"
@@ -120,4 +124,8 @@
 
           (it "negative"
             (should= [:exp [:lit [:num [:hex "-0x123"]]]]
-              (sut/parse "-0x123"))))))))
+              (sut/parse "-0x123"))))                       ;endregion
+        )                                                   ;endregion
+      )                                                     ;endregion
+    )                                                       ;endregion
+  )                                                         ;endregion

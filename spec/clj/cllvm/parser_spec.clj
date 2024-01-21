@@ -214,7 +214,7 @@
 
       ;region nil
       (it "nil"
-        (should= [:exp [:lit [:nil "nil"]]]
+        (should= [:exp [:lit [:nil]]]
           (sut/parse "nil")))                               ;endregion
 
       ;region boolean
@@ -293,23 +293,23 @@
           (sut/parse "()")))
 
       (it "with single child expression"
-        (should= [:exp [:list [:exp [:lit [:nil "nil"]]]]]
+        (should= [:exp [:list [:exp [:lit [:nil]]]]]
           (sut/parse "(nil)")))
 
       (it "with many child expressions"
         (should= [:exp
                   [:list
-                   [:exp [:lit [:nil "nil"]]]
-                   [:exp [:lit [:nil "nil"]]]]]
+                   [:exp [:lit [:nil]]]
+                   [:exp [:lit [:nil]]]]]
           (sut/parse "(nil nil)")))
 
       (it "with child lists"
         (should= [:exp
                   [:list
                    [:exp [:list
-                          [:exp [:lit [:nil "nil"]]]
-                          [:exp [:lit [:nil "nil"]]]]]
-                   [:exp [:lit [:nil "nil"]]]]]
+                          [:exp [:lit [:nil]]]
+                          [:exp [:lit [:nil]]]]]
+                   [:exp [:lit [:nil]]]]]
           (sut/parse "((nil nil) nil)")))
       )                                                     ;endregion
     ;region vector
@@ -320,23 +320,23 @@
           (sut/parse "[]")))
 
       (it "with single child expression"
-        (should= [:exp [:vec [:exp [:lit [:nil "nil"]]]]]
+        (should= [:exp [:vec [:exp [:lit [:nil]]]]]
           (sut/parse "[nil]")))
 
       (it "with many child expressions"
         (should= [:exp
                   [:vec
-                   [:exp [:lit [:nil "nil"]]]
-                   [:exp [:lit [:nil "nil"]]]]]
+                   [:exp [:lit [:nil]]]
+                   [:exp [:lit [:nil]]]]]
           (sut/parse "[nil nil]")))
 
       (it "with child vectors"
         (should= [:exp
                   [:vec
                    [:exp [:vec
-                          [:exp [:lit [:nil "nil"]]]
-                          [:exp [:lit [:nil "nil"]]]]]
-                   [:exp [:lit [:nil "nil"]]]]]
+                          [:exp [:lit [:nil]]]
+                          [:exp [:lit [:nil]]]]]
+                   [:exp [:lit [:nil]]]]]
           (sut/parse "[[nil nil] nil]")))
       )                                                     ;endregion
     ;region map
@@ -348,8 +348,8 @@
 
       (it "contains an even number of expressions"
         (should= [:exp [:map [:pair
-                              [:key [:exp [:lit [:nil "nil"]]]]
-                              [:val [:exp [:lit [:nil "nil"]]]]]]]
+                              [:key [:exp [:lit [:nil]]]]
+                              [:val [:exp [:lit [:nil]]]]]]]
           (sut/parse "{nil nil}"))
         (should-fail-parse (sut/parse "{nil nil nil}")))
 
@@ -357,8 +357,8 @@
         (should= [:exp [:map
                         [:prefix ":pre"]
                         [:pair
-                         [:key [:exp [:lit [:nil "nil"]]]]
-                         [:val [:exp [:lit [:nil "nil"]]]]]]]
+                         [:key [:exp [:lit [:nil]]]]
+                         [:val [:exp [:lit [:nil]]]]]]]
           (sut/parse "#:pre{nil nil}")))
       )                                                     ;endregion
     ;region set
@@ -369,14 +369,14 @@
           (sut/parse "#{}")))
 
       (it "with single child expression"
-        (should= [:exp [:set [:exp [:lit [:nil "nil"]]]]]
+        (should= [:exp [:set [:exp [:lit [:nil]]]]]
           (sut/parse "#{nil}")))
 
       (it "with many child expressions"
         (should= [:exp
                   [:set
-                   [:exp [:lit [:nil "nil"]]]
-                   [:exp [:lit [:nil "nil"]]]]]
+                   [:exp [:lit [:nil]]]
+                   [:exp [:lit [:nil]]]]]
           (sut/parse "#{nil nil}")))
       )                                                     ;endregion
     )                                                       ;endregion

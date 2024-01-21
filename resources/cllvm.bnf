@@ -1,23 +1,23 @@
-exp := lit | sym | list | vec;
+exp := lit | sym | list | vec | map;
 lit := str | num |char | nil | bool | kw;
 
 str := #"\"[^\"]*\"";
 
-num := long | double | ratio | bign | bigdec | octal | hex | radix;
-long := #"-?[0-9]+[lL]?";
+num    := long | double | ratio | bign | bigdec | octal | hex | radix;
+long   := #"-?[0-9]+[lL]?";
 double := #"-?[0-9]*\.[0-9]+([eE]-?[0-9]+)?"
         | #"-?Infinity"
         | #"-?NaN";
-ratio := #"-?[0-9]+/-?[0-9]+";
-bign := #"-?[0-9]+[nN]";
+ratio  := #"-?[0-9]+/-?[0-9]+";
+bign   := #"-?[0-9]+[nN]";
 bigdec := #"-?[0-9]*\.[0-9]+([eE]-?[0-9]+)?M"
-octal := #"-?0[0-7]+"
-hex := #"-?0x[0-9a-fA-F]+"
-radix := #"-?([2-9]|[12][0-9]|3[0-6])r[0-9a-zA-z]+"
+octal  := #"-?0[0-7]+"
+hex    := #"-?0x[0-9a-fA-F]+"
+radix  := #"-?([2-9]|[12][0-9]|3[0-6])r[0-9a-zA-z]+"
 
-char := #"\\." | char_uni | char_oct | char_named;
-char_uni := #"\\u[0-9a-fA-F]{4}"
-char_oct := #"\\o[0-7]{3,4}"
+char       := #"\\." | char_uni | char_oct | char_named;
+char_uni   := #"\\u[0-9a-fA-F]{4}"
+char_oct   := #"\\o[0-7]{3,4}"
 char_named := '\\newline' | '\\return' | '\\space' | '\\tab' | '\\formfeed' | '\\backspace';
 
 nil := 'nil'
@@ -29,4 +29,10 @@ kw := #":[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*"
 sym := !bool #"[^\d:\\\/\s](?:[\w*+!_\-\'?<>=%]|(?<=\w)/(?=\w))*"
 
 list := <'('> exp? (<' '> exp)* <')'>
-vec := <'['> exp? (<' '> exp)* <']'>
+vec  := <'['> exp? (<' '> exp)* <']'>
+
+map    := prefix? <'{'> pair? (<' '> pair)* <'}'>
+prefix := <'#'> #":[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*"
+pair   := key <' '> val
+key    := exp
+val    := exp

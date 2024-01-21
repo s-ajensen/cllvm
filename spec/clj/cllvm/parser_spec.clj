@@ -283,7 +283,7 @@
     ;region list
     (context "list"
 
-      (it "begins and end with parenthesis (but excludes them from structure)"
+      (it "begins and ends with parenthesis (but excludes them from structure)"
         (should= [:exp [:list]]
           (sut/parse "()")))
 
@@ -310,7 +310,7 @@
     ;region vector
     (context "vector"
 
-      (it "begins and end with square brackets (but excludes them from structure)"
+      (it "begins and ends with square brackets (but excludes them from structure)"
         (should= [:exp [:vec]]
           (sut/parse "[]")))
 
@@ -325,7 +325,7 @@
                    [:exp [:lit [:nil "nil"]]]]]
           (sut/parse "[nil nil]")))
 
-      (it "with child vectors or lists"
+      (it "with child vectors"
         (should= [:exp
                   [:vec
                    [:exp [:vec
@@ -333,6 +333,28 @@
                           [:exp [:lit [:nil "nil"]]]]]
                    [:exp [:lit [:nil "nil"]]]]]
           (sut/parse "[[nil nil] nil]")))
+      )                                                     ;endregion
+    ;region map
+    (context "map"
+
+      (it "begins and ends with curly brackets (but excludes them from structure)"
+        (should= [:exp [:map]]
+          (sut/parse "{}")))
+
+      (it "contains an even number of expressions"
+        (should= [:exp [:map [:pair
+                              [:key [:exp [:lit [:nil "nil"]]]]
+                              [:val [:exp [:lit [:nil "nil"]]]]]]]
+          (sut/parse "{nil nil}"))
+        (should-fail-parse (sut/parse "{nil nil nil}")))
+
+      (it "allows namespace prefix"
+        (should= [:exp [:map
+                        [:prefix ":pre"]
+                        [:pair
+                         [:key [:exp [:lit [:nil "nil"]]]]
+                         [:val [:exp [:lit [:nil "nil"]]]]]]]
+          (sut/parse "#:pre{nil nil}")))
       )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

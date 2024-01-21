@@ -280,5 +280,32 @@
         (should-fail-parse (sut/parse "/ab"))
         (should= [:exp [:sym "a/b"]]
           (sut/parse "a/b"))))                              ;endregion
+    ;region list
+    (context "list"
+
+      (it "begins and end with parenthesis (but excludes them from structure)"
+        (should= [:exp [:list]]
+          (sut/parse "()")))
+
+      (it "with single child expression"
+        (should= [:exp [:list [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "(nil)")))
+
+      (it "with many child expressions"
+        (should= [:exp
+                  [:list
+                   [:exp [:lit [:nil "nil"]]]
+                   [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "(nil nil)")))
+
+      (it "with child lists"
+        (should= [:exp
+                  [:list
+                   [:exp [:list
+                          [:exp [:lit [:nil "nil"]]]
+                          [:exp [:lit [:nil "nil"]]]]]
+                   [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "((nil nil) nil)")))
+      )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

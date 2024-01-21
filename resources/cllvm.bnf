@@ -1,4 +1,4 @@
-exp := lit | sym | list | vec | map;
+exp := lit | sym | list | vec | map | set;
 lit := str | num |char | nil | bool | kw;
 
 str := #"\"[^\"]*\"";
@@ -28,8 +28,9 @@ kw := #":[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*"
 
 sym := !bool #"[^\d:\\\/\s](?:[\w*+!_\-\'?<>=%]|(?<=\w)/(?=\w))*"
 
-list := <'('> exp? (<' '> exp)* <')'>
-vec  := <'['> exp? (<' '> exp)* <']'>
+list   := <'('> exp? (<' '> exp)* <')'>
+vec    := <'['> exp? (<' '> exp)* <']'>
+set    := <'#{'> exp? (<' '> exp)* <'}'>
 
 map    := prefix? <'{'> pair? (<' '> pair)* <'}'>
 prefix := <'#'> #":[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*"

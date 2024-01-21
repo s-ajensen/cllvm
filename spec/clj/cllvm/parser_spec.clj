@@ -356,5 +356,23 @@
                          [:val [:exp [:lit [:nil "nil"]]]]]]]
           (sut/parse "#:pre{nil nil}")))
       )                                                     ;endregion
+    ;region set
+    (context "set"
+
+      (it "begins with # and is surrounded by curly brackets (but excludes them from structure)"
+        (should= [:exp [:set]]
+          (sut/parse "#{}")))
+
+      (it "with single child expression"
+        (should= [:exp [:set [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "#{nil}")))
+
+      (it "with many child expressions"
+        (should= [:exp
+                  [:set
+                   [:exp [:lit [:nil "nil"]]]
+                   [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "#{nil nil}")))
+      )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

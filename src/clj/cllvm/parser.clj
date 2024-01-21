@@ -9,4 +9,4 @@
   ([parser code] (parser code))
   ([code] (grammar code)))
 
-; TODO: add semantic analysis step after parsing (for radix + even # map forms + whatever else)
+; TODO: add semantic analysis step after parsing (for radix + whatever else)

@@ -307,5 +307,32 @@
                    [:exp [:lit [:nil "nil"]]]]]
           (sut/parse "((nil nil) nil)")))
       )                                                     ;endregion
+    ;region vector
+    (context "vector"
+
+      (it "begins and end with square brackets (but excludes them from structure)"
+        (should= [:exp [:vec]]
+          (sut/parse "[]")))
+
+      (it "with single child expression"
+        (should= [:exp [:vec [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "[nil]")))
+
+      (it "with many child expressions"
+        (should= [:exp
+                  [:vec
+                   [:exp [:lit [:nil "nil"]]]
+                   [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "[nil nil]")))
+
+      (it "with child vectors or lists"
+        (should= [:exp
+                  [:vec
+                   [:exp [:vec
+                          [:exp [:lit [:nil "nil"]]]
+                          [:exp [:lit [:nil "nil"]]]]]
+                   [:exp [:lit [:nil "nil"]]]]]
+          (sut/parse "[[nil nil] nil]")))
+      )                                                     ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

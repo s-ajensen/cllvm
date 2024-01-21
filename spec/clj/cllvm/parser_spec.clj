@@ -216,6 +216,7 @@
       (it "nil"
         (should= [:exp [:lit [:nil "nil"]]]
           (sut/parse "nil")))                               ;endregion
+
       ;region boolean
       (context "boolean"
 
@@ -227,6 +228,7 @@
           (should= [:exp [:lit [:bool "false"]]]
             (sut/parse "false")))
         )                                                   ;endregion
+
       ;region keyword
       (context "keyword"
 
@@ -252,5 +254,31 @@
           (should-fail-parse (sut/parse ":,")))
         )                                                   ;endregion
       )                                                     ;endregion
+    ;region symbol
+    (context "symbol"
+
+      (it "doesn't start with a number"
+        (should-fail-parse (sut/parse "1sym")))
+
+      (it "allows numbers after alphabetic character"
+        (should= [:exp [:sym "a1"]]
+          (sut/parse "a1")))
+
+      (it "allow non-numeric characters"
+        (should= [:exp [:sym "*a"]] (sut/parse "*a"))
+        (should= [:exp [:sym "+a"]] (sut/parse "+a"))
+        (should= [:exp [:sym "!a"]] (sut/parse "!a"))
+        (should= [:exp [:sym "-a"]] (sut/parse "-a"))
+        (should= [:exp [:sym "_a"]] (sut/parse "_a"))
+        (should= [:exp [:sym "?a"]] (sut/parse "?a"))
+        (should= [:exp [:sym "<a"]] (sut/parse "<a"))
+        (should= [:exp [:sym ">a"]] (sut/parse ">a"))
+        (should= [:exp [:sym "=a"]] (sut/parse "=a"))
+        (should= [:exp [:sym ".a"]] (sut/parse ".a")))
+
+      (it "allows slashes (but not at the beginning)"
+        (should-fail-parse (sut/parse "/ab"))
+        (should= [:exp [:sym "a/b"]]
+          (sut/parse "a/b"))))                              ;endregion
     )                                                       ;endregion
   )                                                         ;endregion

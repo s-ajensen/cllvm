@@ -252,6 +252,11 @@
           (should-fail-parse (sut/parse ":}"))
           (should-fail-parse (sut/parse ": "))
           (should-fail-parse (sut/parse ":,")))
+
+        (it "allows slashes (but not at the beginning)"
+          (should-fail-parse (sut/parse ":/ab"))
+          (should= [:exp [:lit [:kw ":a/b"]]]
+            (sut/parse ":a/b")))
         )                                                   ;endregion
       )                                                     ;endregion
     ;region symbol

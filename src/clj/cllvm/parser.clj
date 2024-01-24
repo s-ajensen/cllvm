@@ -9,4 +9,4 @@
   ([parser code] (parser code))
   ([code] (grammar code)))
 
-; TODO: add semantic analysis step after parsing (for radix + converting long to bigint if necessary + whatever else)
+; TODO: add semantic analysis step after parsing (for radix + converting long to bigint if necessary + map prefixes for keyword keys + whatever else)

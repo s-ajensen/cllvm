@@ -1,8 +1,8 @@
-(ns cllvm.compiler-spec
+(ns cllvm.reader-spec
   (:require [speclj.core :refer :all]
-            [cllvm.compiler :as sut]))
+            [cllvm.reader :as sut]))
 
-(describe "Compiler"
+(describe "Reader"
 
   (context "boilerplate"
 
@@ -24,4 +24,13 @@
                  "source_filename = \"test.ll\"\n"
                  "define i32 @main() {\n"
                  "}\n")
-        (sut/clj->ir "test" [:exp])))))
+        (sut/clj->ir "test" [:exp]))))
+
+  (context "literal expressions"
+    (should= (str
+               "; ModuleID = 'test'\n"
+               "source_filename = \"test.ll\"\n"
+               "define i32 @main() {\n"
+               "store i64 123, i64* %result"
+               "}\n")
+      (sut/clj->ir "test" [:exp [:lit [:long "123"]]]))))

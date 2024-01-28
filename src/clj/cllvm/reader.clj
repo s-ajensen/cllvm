@@ -1,4 +1,4 @@
-(ns cllvm.compiler)
+(ns cllvm.reader)
 
 (defn ->module-def [ns]
   (str "; ModuleID = '" ns "'\n"))

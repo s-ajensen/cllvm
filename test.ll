@@ -36,9 +36,8 @@ declare i32 @printf(i8*, ...)
 
 %TypeTag = type { i32 }
 %Primitive = type { %TypeTag, [8 x i8] }
-@result = external global %Primitive*
 
-define void @eval() {
+define %Primitive* @eval() {
 entry:
     %ptr_0 = alloca %Primitive, align 8
     %ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0
@@ -46,8 +45,7 @@ entry:
     %ptr_3 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1
     %ptr_4 = bitcast [8 x i8]* %ptr_3 to i64*
     store i64 124, i64* %ptr_4, align 8
-    store %Primitive* %ptr_0, %Primitive** @result, align 8
-    ret void
+    ret %Primitive* %ptr_0
 }
 
 ;define i32 @main() {

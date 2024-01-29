@@ -1,5 +1,7 @@
 (ns cllvm.reader
-  (:require [c3kit.apron.corec :as ccc]))
+  (:require [c3kit.apron.corec :as ccc]
+            [cllvm.ll :as ll]
+            [clojure.string :as str]))
 
 (def var-idx (atom 0))
 (defn var-idx! []
@@ -12,21 +14,11 @@
 
 (def prim "%Primitive")
 (def prim* (str prim "*"))
-(def eval "eval")
 
 (defn lines->str [& lines]
   (->> lines
     (filter some?)
-    (mapv #(str % \newline))
-    (apply str)))
-
-(defn ->module-def [ns]
-  (str "; ModuleID = '" ns "'\n"))
-(defn ->src-def [ns]
-  (str "source_filename = \"" ns ".ll\"\n"))
-(defn ->type-def []
-  (str "%TypeTag = type { i32 }\n"
-    "%Primitive = type { %TypeTag, [8 x i8] }\n"))
+    (str/join "\n")))
 
 (defn ->func-def [type name body]
   (lines->str
@@ -66,8 +58,9 @@
 (defn ast->ir
   ([expr] (ast->ir "user" expr))
   ([ns expr]
-   (str
-     (->module-def ns)
-     (->src-def ns)
-     (->type-def)
-     (->func-def prim* eval (expr->ir expr)))))
+   (lines->str
+     (ll/->module ns)
+     (ll/->source ns)
+     (ll/->type "TypeTag" "i32")
+     (ll/->type "Primitive" "%TypeTag" "[8 x i8]")
+     (->func-def prim* "eval" (expr->ir expr)))))

@@ -47,6 +47,6 @@
                  "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
                  "%ptr_3 = bitcast [8 x i8]* %ptr_2 to i64*"
                  "store i64 123, i64* %ptr_3, align 8"
-                 "ret %Primitive* %ptr_0" ""
+                 "ret %Primitive* %ptr_0"
                  "}")
         (sut/ast->ir "test" [:exp [:lit [:num [:long "123"]]]])))))

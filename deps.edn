@@ -1,9 +1,12 @@
 {:paths   ["src/clj"]
- :deps    {org.clojure/clojure   {:mvn/version "1.10.1"}
-           instaparse/instaparse {:mvn/version "1.4.12"}}
+ :deps    {com.cleancoders.c3kit/apron {:mvn/version "2.0.6"}
+           org.clojure/clojure         {:mvn/version "1.10.1"}
+           instaparse/instaparse       {:mvn/version "1.4.12"}}
  :aliases {
            :test  {:extra-deps  {speclj/speclj {:mvn/version "3.4.3"}}
                    :extra-paths ["spec/clj"]}
            :spec  {:main-opts ["-m" "speclj.main" "-c"]}
            :start {:main-opts ["-m" "aoc.main"]}
+           :eval  {:extra-paths ["dev"]
+                   :main-opts   ["-m" "cllvm.eval"]}
            }}

@@ -44,7 +44,7 @@ entry:
     store i32 0, i32* %ptr_1
     %ptr_3 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1
     %ptr_4 = bitcast [8 x i8]* %ptr_3 to i64*
-    store i64 124, i64* %ptr_4, align 8
+    store i64 125, i64* %ptr_4, align 8
     ret %Primitive* %ptr_0
 }
 

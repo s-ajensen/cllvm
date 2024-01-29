@@ -3,6 +3,7 @@
             [cllvm.reader :as sut]))
 
 (describe "Reader"
+  (before (reset! sut/var-idx 0))
 
   (context "boilerplate"
 
@@ -10,34 +11,42 @@
       (should-start-with (str
                  "; ModuleID = 'user'\n"
                  "source_filename = \"user.ll\"\n")
-        (sut/clj->ir [:exp])))
+        (sut/ast->ir [:exp])))
 
     (it "defines specific module and filename"
       (should-start-with (str
                  "; ModuleID = 'test'\n"
                  "source_filename = \"test.ll\"\n")
-        (sut/clj->ir "test" [:exp])))
+        (sut/ast->ir "test" [:exp])))
 
     (it "defines main entry point"
-      (should= (str
-                 "; ModuleID = 'test'\n"
-                 "source_filename = \"test.ll\"\n"
-                 "define i32 @main() {\n"
-                 "}\n")
-        (sut/clj->ir "test" [:exp]))))
+      (should= (sut/lines->str
+                 "; ModuleID = 'test'"
+                 "source_filename = \"test.ll\""
+                 "%TypeTag = type { i32 }"
+                 "%Primitive = type { %TypeTag, [8 x i8] }"
+                 "define %Primitive* @eval() {"
+                 "entry:"
+                 "ret %Primitive* null"
+                 "}")
+        (sut/ast->ir "test" [:exp]))))
 
   (context "literal expressions"
-    (should= (str
-               "; ModuleID = 'test'\n"
-               "source_filename = \"test.ll\"\n"
-               "define void @eval() {\n"
-               "%ptr_0 = alloca %Primitive, align 8\n"
-               "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0\n"
-               "store i32 @LONG, i32* %ptr_1\n"
-               "%ptr_3 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1\n"
-               "%ptr_4 = bitcast [8 x i8]* %ptr_3 to i64*\n"
-               "store i64 123, i64* %ptr_4, align 8\n"
-               "store %Primitive* %ptr_0, %Primitive** @result, align 8\n"
-               "ret 0"
-               "}\n")
-      (sut/clj->ir "test" [:exp [:lit [:long "123"]]]))))
+
+    (it "long"
+      (should= (sut/lines->str
+                 "; ModuleID = 'test'"
+                 "source_filename = \"test.ll\""
+                 "%TypeTag = type { i32 }"
+                 "%Primitive = type { %TypeTag, [8 x i8] }"
+                 "define %Primitive* @eval() {"
+                 "entry:"
+                 "%ptr_0 = alloca %Primitive, align 8"
+                 "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
+                 "store i32 0, i32* %ptr_1"
+                 "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
+                 "%ptr_3 = bitcast [8 x i8]* %ptr_2 to i64*"
+                 "store i64 123, i64* %ptr_3, align 8"
+                 "ret %Primitive* %ptr_0" ""
+                 "}")
+        (sut/ast->ir "test" [:exp [:lit [:num [:long "123"]]]])))))

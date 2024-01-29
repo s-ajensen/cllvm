@@ -1,6 +1,7 @@
 (ns cllvm.reader
   (:require [c3kit.apron.corec :as ccc]
             [cllvm.ll :as ll]
+            [cllvm.util :as util]
             [clojure.string :as str]))
 
 (def var-idx (atom 0))
@@ -14,20 +15,6 @@
 
 (def prim "%Primitive")
 (def prim* (str prim "*"))
-
-(defn lines->str [& lines]
-  (->> lines
-    (filter some?)
-    (str/join "\n")))
-
-(defn ->func-def [type name body]
-  (lines->str
-    (str "define " type " @" name "() {")
-    "entry:"
-    (or
-      body
-      (str "ret " type " null"))
-    "}"))
 
 (defmulti expr->ir first)
 
@@ -46,7 +33,7 @@
         type*-sym (->ptr-sym!)
         val*-sym  (->ptr-sym!)
         long*-sym (->ptr-sym!)]
-    (lines->str
+    (util/lines->str
       (str prim*-sym " = alloca " prim ", align 8")
       (str type*-sym " = getelementptr " prim ", " prim* " " prim*-sym ", i32 0, i32 0")
       (str "store i32 0, i32* " type*-sym)
@@ -58,9 +45,9 @@
 (defn ast->ir
   ([expr] (ast->ir "user" expr))
   ([ns expr]
-   (lines->str
+   (util/lines->str
      (ll/->module ns)
      (ll/->source ns)
      (ll/->type "TypeTag" "i32")
      (ll/->type "Primitive" "%TypeTag" "[8 x i8]")
-     (->func-def prim* "eval" (expr->ir expr)))))
+     (ll/->func prim* "eval" (expr->ir expr)))))

@@ -1,5 +1,6 @@
 (ns cllvm.reader-spec
-  (:require [speclj.core :refer :all]
+  (:require [cllvm.util :as util]
+            [speclj.core :refer :all]
             [cllvm.reader :as sut]))
 
 (describe "Reader"
@@ -20,7 +21,7 @@
         (sut/ast->ir "test" [:exp])))
 
     (it "defines main entry point"
-      (should= (sut/lines->str
+      (should= (util/lines->str
                  "; ModuleID = 'test'"
                  "source_filename = \"test.ll\""
                  "%TypeTag = type { i32 }"
@@ -34,7 +35,7 @@
   (context "literal expressions"
 
     (it "long"
-      (should= (sut/lines->str
+      (should= (util/lines->str
                  "; ModuleID = 'test'"
                  "source_filename = \"test.ll\""
                  "%TypeTag = type { i32 }"

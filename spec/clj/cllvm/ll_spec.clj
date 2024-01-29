@@ -1,5 +1,7 @@
 (ns cllvm.ll-spec
-  (:require [speclj.core :refer :all]
+  (:require [cllvm.reader :as reader]
+            [cllvm.util :as util]
+            [speclj.core :refer :all]
             [cllvm.ll :as sut]))
 
 (describe "LLVM API"
@@ -25,4 +27,21 @@
         (sut/->type "Test" "[8 x i8]" "[4 x i8]"))))
 
   (context "function definitions"
-    ))
+
+    (it "with no body"
+      (should= (util/lines->str
+                 "define %Type* @name() {"
+                 "entry:"
+                 "ret %Type* null"
+                 "}")
+        (sut/->func "%Type*" "name")))
+
+    (it "with body"
+      (should= (util/lines->str
+                 "define %Type* @name() {"
+                 "entry:"
+                 ";line 1"
+                 ";line 2"
+                 "ret %Type* null"
+                 "}")
+        (sut/->func "%Type*" "name" ";line 1\n;line 2\nret %Type* null")))))

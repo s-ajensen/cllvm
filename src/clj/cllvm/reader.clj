@@ -1,8 +1,6 @@
 (ns cllvm.reader
-  (:require [c3kit.apron.corec :as ccc]
-            [cllvm.ll :as ll]
-            [cllvm.util :as util]
-            [clojure.string :as str]))
+  (:require [cllvm.ll :as ll :refer [->* i32 i64]]
+            [cllvm.util :as util]))
 
 (def var-idx (atom 0))
 (defn var-idx! []
@@ -34,20 +32,20 @@
         val*-sym  (->ptr-sym!)
         long*-sym (->ptr-sym!)]
     (util/lines->str
-      (str prim*-sym " = alloca " prim ", align 8")
-      (str type*-sym " = getelementptr " prim ", " prim* " " prim*-sym ", i32 0, i32 0")
-      (str "store i32 0, i32* " type*-sym)
-      (str val*-sym " = getelementptr " prim ", " prim* " " prim*-sym ", i32 0, i32 1")
-      (str long*-sym " = bitcast [8 x i8]* " val*-sym " to i64*")
-      (str "store i64 " body ", i64* " long*-sym ", align 8")
-      (str "ret " prim* " " prim*-sym))))
+      (ll/alloca prim*-sym prim 8)
+      (ll/get-element* type*-sym prim prim*-sym [i32 0] [i32 0])
+      (ll/store type*-sym i32 0)
+      (ll/get-element* val*-sym prim prim*-sym [i32 0] [i32 1])
+      (ll/bitcast long*-sym val*-sym (->* "[8 x i8]") (->* i64))
+      (ll/store long*-sym i64 body 8)
+      (ll/ret prim* prim*-sym))))
 
 (defn ast->ir
   ([expr] (ast->ir "user" expr))
   ([ns expr]
    (util/lines->str
-     (ll/->module ns)
-     (ll/->source ns)
-     (ll/->type "TypeTag" "i32")
-     (ll/->type "Primitive" "%TypeTag" "[8 x i8]")
-     (ll/->func prim* "eval" (expr->ir expr)))))
+     (ll/module ns)
+     (ll/source ns)
+     (ll/type "TypeTag" "i32")
+     (ll/type "Primitive" "%TypeTag" "[8 x i8]")
+     (ll/func prim* "eval" (expr->ir expr)))))

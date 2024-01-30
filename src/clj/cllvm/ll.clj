@@ -2,8 +2,9 @@
   (:require [cllvm.util :as util]
             [clojure.string :as str]))
 
-(def i32 "i32")
-(def i64 "i64")
+(def _i32 "i32")
+(def _i64 "i64")
+(def _double "double")
 
 (defn module [name]
   (str "; ModuleID = '" name "'"))

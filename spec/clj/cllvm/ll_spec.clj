@@ -1,7 +1,7 @@
 (ns cllvm.ll-spec
   (:require [cllvm.util :as util]
             [speclj.core :refer :all]
-            [cllvm.ll :as sut :refer [i32]]))
+            [cllvm.ll :as sut :refer [_i32]]))
 
 (describe "LLVM API"
 
@@ -61,25 +61,25 @@
 
       (it "without alignment"
         (should= "store i32 0, i32* %sym"
-          (sut/store "%sym" i32 0)))
+          (sut/store "%sym" _i32 0)))
 
       (it "with alignment"
         (should= "store i32 0, i32* %sym, align 8"
-          (sut/store "%sym" i32 0 8))))
+          (sut/store "%sym" _i32 0 8))))
 
     (context "getelementptr"
 
       (it "single index"
         (should= "%symbol = getelementptr i32, i32* %base, i32 0"
-          (sut/get-element* "%symbol" "i32" "%base" [i32 0])))
+          (sut/get-element* "%symbol" "i32" "%base" [_i32 0])))
 
       (it "two indices"
         (should= "%symbol = getelementptr %Type, %Type* %base, i32 0, i32 1"
-          (sut/get-element* "%symbol" "%Type" "%base" [i32 0] [i32 1])))
+          (sut/get-element* "%symbol" "%Type" "%base" [_i32 0] [_i32 1])))
 
       (it "many indices"
         (should= "%symbol = getelementptr %Type, %Type* %base, i32 0, i32 1, i32 5, i32 9, i32 0"
-          (sut/get-element* "%symbol" "%Type" "%base" [i32 0] [i32 1] [i32 5] [i32 9] [i32 0]))))
+          (sut/get-element* "%symbol" "%Type" "%base" [_i32 0] [_i32 1] [_i32 5] [_i32 9] [_i32 0]))))
 
     (it "bitcast"
       (should= "%sym2 = bitcast [8 x i8]* %sym1 to i64*"
@@ -87,4 +87,4 @@
 
     (it "ret"
       (should= "ret i32 0"
-        (sut/ret i32 0)))))
+        (sut/ret _i32 0)))))

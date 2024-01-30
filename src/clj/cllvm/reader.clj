@@ -1,5 +1,5 @@
 (ns cllvm.reader
-  (:require [cllvm.ll :as ll :refer [->* i32 i64]]
+  (:require [cllvm.ll :as ll :refer [->* _i32 _i64 _double]]
             [cllvm.util :as util]))
 
 (def var-idx (atom 0))
@@ -33,11 +33,25 @@
         long*-sym (->ptr-sym!)]
     (util/lines->str
       (ll/alloca prim*-sym prim 8)
-      (ll/get-element* type*-sym prim prim*-sym [i32 0] [i32 0])
-      (ll/store type*-sym i32 0)
-      (ll/get-element* val*-sym prim prim*-sym [i32 0] [i32 1])
-      (ll/bitcast long*-sym val*-sym (->* "[8 x i8]") (->* i64))
-      (ll/store long*-sym i64 body 8)
+      (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])
+      (ll/store type*-sym _i32 0)
+      (ll/get-element* val*-sym prim prim*-sym [_i32 0] [_i32 1])
+      (ll/bitcast long*-sym val*-sym (->* "[8 x i8]") (->* _i64))
+      (ll/store long*-sym _i64 body 8)
+      (ll/ret prim* prim*-sym))))
+; TODO refactor these! They're almost exactly the same!
+(defmethod expr->ir :double [[_ body]]
+  (let [prim*-sym (->ptr-sym!)
+        type*-sym (->ptr-sym!)
+        val*-sym  (->ptr-sym!)
+        long*-sym (->ptr-sym!)]
+    (util/lines->str
+      (ll/alloca prim*-sym prim 8)
+      (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])
+      (ll/store type*-sym _i32 1)
+      (ll/get-element* val*-sym prim prim*-sym [_i32 0] [_i32 1])
+      (ll/bitcast long*-sym val*-sym (->* "[8 x i8]") (->* _double))
+      (ll/store long*-sym _double body 8)
       (ll/ret prim* prim*-sym))))
 
 (defn ast->ir

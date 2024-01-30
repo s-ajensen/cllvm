@@ -32,22 +32,44 @@
                  "}")
         (sut/ast->ir "test" [:exp]))))
 
-  (context "literal expressions"
+  (context "expressions"
 
-    (it "long"
-      (should= (util/lines->str
-                 "; ModuleID = 'test'"
-                 "source_filename = \"test.ll\""
-                 "%TypeTag = type { i32 }"
-                 "%Primitive = type { %TypeTag, [8 x i8] }"
-                 "define %Primitive* @eval() {"
-                 "entry:"
-                 "%ptr_0 = alloca %Primitive, align 8"
-                 "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
-                 "store i32 0, i32* %ptr_1"
-                 "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
-                 "%ptr_3 = bitcast [8 x i8]* %ptr_2 to i64*"
-                 "store i64 123, i64* %ptr_3, align 8"
-                 "ret %Primitive* %ptr_0"
-                 "}")
-        (sut/ast->ir "test" [:exp [:lit [:num [:long "123"]]]])))))
+    (context "literal"
+
+      (context "number"
+
+        (it "long"
+          (should= (util/lines->str
+                     "; ModuleID = 'test'"
+                     "source_filename = \"test.ll\""
+                     "%TypeTag = type { i32 }"
+                     "%Primitive = type { %TypeTag, [8 x i8] }"
+                     "define %Primitive* @eval() {"
+                     "entry:"
+                     "%ptr_0 = alloca %Primitive, align 8"
+                     "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
+                     "store i32 0, i32* %ptr_1"
+                     "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
+                     "%ptr_3 = bitcast [8 x i8]* %ptr_2 to i64*"
+                     "store i64 123, i64* %ptr_3, align 8"
+                     "ret %Primitive* %ptr_0"
+                     "}")
+            (sut/ast->ir "test" [:exp [:lit [:num [:long "123"]]]])))
+
+        (it "double"
+          (should= (util/lines->str
+                     "; ModuleID = 'test'"
+                     "source_filename = \"test.ll\""
+                     "%TypeTag = type { i32 }"
+                     "%Primitive = type { %TypeTag, [8 x i8] }"
+                     "define %Primitive* @eval() {"
+                     "entry:"
+                     "%ptr_0 = alloca %Primitive, align 8"
+                     "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
+                     "store i32 1, i32* %ptr_1"
+                     "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
+                     "%ptr_3 = bitcast [8 x i8]* %ptr_2 to double*"
+                     "store double 1.23, double* %ptr_3, align 8"
+                     "ret %Primitive* %ptr_0"
+                     "}")
+            (sut/ast->ir "test" [:exp [:lit [:num [:double "1.23"]]]])))))))

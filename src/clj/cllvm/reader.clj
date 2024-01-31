@@ -1,5 +1,5 @@
 (ns cllvm.reader
-  (:require [cllvm.ll :as ll :refer [->* _i32 _i64 _double]]
+  (:require [cllvm.ll.core :as ll :refer [->* _i32 _i64 _double type-codes]]
             [cllvm.util :as util]))
 
 (def var-idx (atom 0))
@@ -24,35 +24,27 @@
 (defmethod expr->ir :lit [[_ body]]
   (expr->ir body))
 
+(defn ret-prim [type val]
+  (let [prim*-sym (->ptr-sym!)
+        type*-sym (->ptr-sym!)
+        val*-sym  (->ptr-sym!)
+        casted*-sym (->ptr-sym!)]
+    (util/lines->str
+      (ll/alloca prim*-sym prim 8)
+      (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])
+      (ll/store type*-sym _i32 (type-codes type))
+      (ll/get-element* val*-sym prim prim*-sym [_i32 0] [_i32 1])
+      (ll/bitcast casted*-sym val*-sym (->* "[8 x i8]") (->* type))
+      (ll/store casted*-sym type val 8)
+      (ll/ret prim* prim*-sym))))
+
 (defmethod expr->ir :num [[_ body]]
   (expr->ir body))
 (defmethod expr->ir :long [[_ body]]
-  (let [prim*-sym (->ptr-sym!)
-        type*-sym (->ptr-sym!)
-        val*-sym  (->ptr-sym!)
-        long*-sym (->ptr-sym!)]
-    (util/lines->str
-      (ll/alloca prim*-sym prim 8)
-      (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])
-      (ll/store type*-sym _i32 0)
-      (ll/get-element* val*-sym prim prim*-sym [_i32 0] [_i32 1])
-      (ll/bitcast long*-sym val*-sym (->* "[8 x i8]") (->* _i64))
-      (ll/store long*-sym _i64 body 8)
-      (ll/ret prim* prim*-sym))))
-; TODO refactor these! They're almost exactly the same!
+  (ret-prim _i64 body))
+
 (defmethod expr->ir :double [[_ body]]
-  (let [prim*-sym (->ptr-sym!)
-        type*-sym (->ptr-sym!)
-        val*-sym  (->ptr-sym!)
-        long*-sym (->ptr-sym!)]
-    (util/lines->str
-      (ll/alloca prim*-sym prim 8)
-      (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])
-      (ll/store type*-sym _i32 1)
-      (ll/get-element* val*-sym prim prim*-sym [_i32 0] [_i32 1])
-      (ll/bitcast long*-sym val*-sym (->* "[8 x i8]") (->* _double))
-      (ll/store long*-sym _double body 8)
-      (ll/ret prim* prim*-sym))))
+  (ret-prim _double body))
 
 (defn ast->ir
   ([expr] (ast->ir "user" expr))

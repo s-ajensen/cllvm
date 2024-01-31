@@ -1,10 +1,16 @@
-(ns cllvm.ll
+(ns cllvm.ll.core
   (:require [cllvm.util :as util]
             [clojure.string :as str]))
 
 (def _i32 "i32")
 (def _i64 "i64")
 (def _double "double")
+
+(def type-codes
+  {
+   _i64    0
+   _double 1
+   })
 
 (defn module [name]
   (str "; ModuleID = '" name "'"))
@@ -18,13 +24,15 @@
 (defn align [alignment]
   (str ", align " alignment))
 
+(defn bblock [name body]
+  (str name ":\n" body))
+
 (defn func
   ([type name body]
    (if body
      (util/lines->str
        (str "define " type " @" name "() {")
-       "entry:"
-       body
+       (bblock "entry" body)
        "}")
      (func type name)))
   ([type name]

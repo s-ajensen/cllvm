@@ -1,7 +1,7 @@
-(ns cllvm.ll-spec
+(ns cllvm.ll.core-spec
   (:require [cllvm.util :as util]
             [speclj.core :refer :all]
-            [cllvm.ll :as sut :refer [_i32]]))
+            [cllvm.ll.core :as sut :refer [_i32]]))
 
 (describe "LLVM API"
 

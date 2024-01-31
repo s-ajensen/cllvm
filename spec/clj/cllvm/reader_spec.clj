@@ -10,7 +10,8 @@
                   "source_filename = \"test.ll\""
                   "%TypeTag = type { i32 }"
                   "%Primitive = type { %TypeTag, [8 x i8] }"
-                  "define %Primitive* @eval() {"]
+                  "define %Primitive* @eval() {"
+                  "entry:"]
                  lines
                  ["}"])))
 
@@ -33,7 +34,6 @@
 
     (it "defines main entry point"
       (should= (with-boilerplate
-                 "entry:"
                  "ret %Primitive* null")
         (sut/ast->ir "test" [:exp]))))
 
@@ -45,7 +45,6 @@
 
         (it "long"
           (should= (with-boilerplate
-                     "entry:"
                      "%ptr_0 = alloca %Primitive, align 8"
                      "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
                      "store i32 0, i32* %ptr_1"
@@ -57,7 +56,6 @@
 
         (it "double"
           (should= (with-boilerplate
-                     "entry:"
                      "%ptr_0 = alloca %Primitive, align 8"
                      "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
                      "store i32 1, i32* %ptr_1"

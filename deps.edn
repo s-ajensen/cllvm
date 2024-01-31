@@ -6,7 +6,6 @@
            :test  {:extra-deps  {speclj/speclj {:mvn/version "3.4.3"}}
                    :extra-paths ["spec/clj"]}
            :spec  {:main-opts ["-m" "speclj.main" "-c"]}
-           :start {:main-opts ["-m" "aoc.main"]} ; [GMJ] advent of code?
            :eval  {:extra-paths ["dev"]
                    :main-opts   ["-m" "cllvm.eval"]}
            }}

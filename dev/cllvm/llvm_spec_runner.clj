@@ -15,7 +15,7 @@
   (generate-src (str spec-path path "/" name "/" name ".ll") actual-expr)
   (let [spec-file (str spec-path path "/" name "/" name "_spec.ll")
         source-file (str spec-path path "/" name "/" name ".ll")
-        {:keys [out err]} (sh "/bin/sh" "-c" (str "llvm-link " spec-file " " source-file " -o - | lli"))]
+        {:keys [out err]} (sh "/bin/sh" "-c" (str "/opt/homebrew/opt/llvm/bin/llvm-link " spec-file " " source-file " -o - | /opt/homebrew/opt/llvm/bin/lli"))]
     (print out)
     (when err (print err))
     (flush)))

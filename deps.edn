@@ -3,9 +3,11 @@
            org.clojure/clojure         {:mvn/version "1.10.1"}
            instaparse/instaparse       {:mvn/version "1.4.12"}}
  :aliases {
-           :test  {:extra-deps  {speclj/speclj {:mvn/version "3.4.3"}}
-                   :extra-paths ["spec/clj"]}
-           :spec  {:main-opts ["-m" "speclj.main" "-c"]}
-           :eval  {:extra-paths ["dev"]
-                   :main-opts   ["-m" "cllvm.eval"]}
+           :test      {:extra-deps  {speclj/speclj {:mvn/version "3.4.3"}}
+                       :extra-paths ["spec/clj"]}
+           :spec      {:main-opts ["-m" "speclj.main" "-c"]}
+           :eval      {:extra-paths ["dev"]
+                       :main-opts   ["-m" "cllvm.eval"]}
+           :llvm-spec {:extra-paths ["dev"]
+                       :main-opts ["-m" "cllvm.llvm-spec-runner"]}
            }}

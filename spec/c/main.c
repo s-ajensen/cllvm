@@ -2,4 +2,5 @@
 
 int main() {
     string_specs();
+    print_summary();
 }

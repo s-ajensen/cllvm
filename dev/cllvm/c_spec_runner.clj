@@ -33,7 +33,7 @@
     (println "done")))
 
 (defn delete-o-files []
-  (print "deleting *.o files...")
+  (print "deleting .o files...")
   (run-command "rm *.o")
   (println "done"))
 

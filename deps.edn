@@ -10,4 +10,6 @@
                        :main-opts   ["-m" "cllvm.eval"]}
            :llvm-spec {:extra-paths ["dev"]
                        :main-opts ["-m" "cllvm.llvm-spec-runner"]}
+           :c-spec    {:extra-paths ["dev"]
+                       :main-opts ["-m" "cllvm.c-spec-runner"]}
            }}

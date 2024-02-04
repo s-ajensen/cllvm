@@ -42,6 +42,7 @@ char* string_toLowerCase(char* s) {
     return out;
 }
 
+// TODO - could be optimized if necessary
 int string_compareToIgnoreCase(char* s1,char* s2) {
     char* lower1 = string_toLowerCase(s1);
     char* lower2 = string_toLowerCase(s2);

@@ -12,8 +12,8 @@ void print_summary();
 #define it(msg, test) printf("  - %s\n",msg);\
                                              {test}
 
-#define pass() __pass_count++; printf("    - passed!\n")
-#define fail() __fail_count++; printf("    - failed! %s:%d\n",__FILE__,__LINE__)
+#define pass() __pass_count++
+#define fail() __fail_count++; printf("    - [failed!] %s:%d\n",__FILE__,__LINE__)
 
 #define should(assertion) if (assertion) {pass();} else {fail();}
 

@@ -43,7 +43,7 @@
 
 (defn compile-specs []
   (print "compiling specs...")
-  (let [paths ["src/c/" "spec/c/"]
+  (let [paths ["src/c/" "spec/c/" "spec/c/specc/"]
         src-files (apply concat (map c-files paths))]
     (doall (map compile-to-object src-files)))
   (println "done"))

@@ -1,6 +1,7 @@
-#include "string_spec.h"
+#include "specc/specc.h"
+#include "../../src/c/string.h"
 
-void string_specs() {
+module(string, {
     describe("string_charAt",
 
         it("gets first index",
@@ -115,4 +116,4 @@ void string_specs() {
             should(string_compareToIgnoreCase("abi","Abf") == 3);
             should(string_compareToIgnoreCase("abi","ABF") == 3);
             should(string_compareToIgnoreCase("bye BYE","BYE bye") == 0);));
-}
+});

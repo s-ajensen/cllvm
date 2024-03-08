@@ -11,6 +11,9 @@
 (defn ->ptr-sym! []
   (str "%ptr_" (var-idx!)))
 
+(defn ->val-sym! []
+  (str "%val_" (var-idx!)))
+
 (def prim "%Primitive")
 (def prim* (str prim "*"))
 
@@ -28,7 +31,7 @@
   (let [prim*-sym (->ptr-sym!)
         type*-sym (->ptr-sym!)
         address*-sym  (->ptr-sym!)
-        value*-sym (->ptr-sym!)]
+        value*-sym (->val-sym!)]
     (util/lines->str
       (ll/alloca prim*-sym prim 8)
       (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])

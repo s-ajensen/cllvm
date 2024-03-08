@@ -49,9 +49,9 @@
                      "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
                      "store i32 0, i32* %ptr_1"
                      "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
-                     "%ptr_3 = alloca i64, align 8"
-                     "store i64 123, i64* %ptr_3, align 8"
-                     "store i64* %ptr_3, ptr %ptr_2, align 8"
+                     "%val_3 = alloca i64, align 8"
+                     "store i64 123, i64* %val_3, align 8"
+                     "store i64* %val_3, ptr %ptr_2, align 8"
                      "ret %Primitive* %ptr_0")
             (sut/ast->ir "test" [:exp [:lit [:num [:long "123"]]]])))
 
@@ -61,8 +61,8 @@
                      "%ptr_1 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 0"
                      "store i32 1, i32* %ptr_1"
                      "%ptr_2 = getelementptr %Primitive, %Primitive* %ptr_0, i32 0, i32 1"
-                     "%ptr_3 = alloca double, align 8"
-                     "store double 1.23, double* %ptr_3, align 8"
-                     "store double* %ptr_3, ptr %ptr_2, align 8"
+                     "%val_3 = alloca double, align 8"
+                     "store double 1.23, double* %val_3, align 8"
+                     "store double* %val_3, ptr %ptr_2, align 8"
                      "ret %Primitive* %ptr_0")
             (sut/ast->ir "test" [:exp [:lit [:num [:double "1.23"]]]])))))))

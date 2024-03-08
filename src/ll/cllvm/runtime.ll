@@ -1,34 +1,62 @@
-declare i32 @printf(i8*, ...)
+; ModuleID = 'runtime.c'
+source_filename = "runtime.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
 
-%TypeTag = type { i32 }
-%Primitive = type { %TypeTag, [8 x i8] }
+%struct.Primitive = type { i32, ptr }
 
-declare %Primitive* @eval()
+@.str = private unnamed_addr constant [5 x i8] c"%ld\0A\00", align 1
+@.str.1 = private unnamed_addr constant [4 x i8] c"%f\0A\00", align 1
 
-@long_fmt = private unnamed_addr constant [5 x i8] c"%ld\0A\00", align 1
-@double_fmt = private unnamed_addr constant [4 x i8] c"%f\0A\00", align 1
+; Function Attrs: noinline nounwind optnone uwtable
+define dso_local i32 @main() #0 {
+  %1 = alloca i32, align 4
+  %2 = alloca ptr, align 8
+  store i32 0, ptr %1, align 4
+  %3 = call ptr @eval()
+  store ptr %3, ptr %2, align 8
+  %4 = load ptr, ptr %2, align 8
+  %5 = getelementptr inbounds %struct.Primitive, ptr %4, i32 0, i32 0
+  %6 = load i32, ptr %5, align 8
+  switch i32 %6, label %19 [
+    i32 0, label %7
+    i32 1, label %13
+  ]
 
-define i32 @main() {
-entry:
-    %ptr_result = call %Primitive* @eval()
-    %ptr_tag = getelementptr %Primitive, %Primitive* %ptr_result, i32 0, i32 0
-    %type_tag = load i32, i32* %ptr_tag, align 4
-    %ptr_value = getelementptr %Primitive, %Primitive* %ptr_result, i32 0, i32 1
+7:                                                ; preds = %0
+  %8 = load ptr, ptr %2, align 8
+  %9 = getelementptr inbounds %struct.Primitive, ptr %8, i32 0, i32 1
+  %10 = load ptr, ptr %9, align 8
+  %11 = load i64, ptr %10, align 8
+  %12 = call i32 (ptr, ...) @printf(ptr noundef @.str, i64 noundef %11)
+  br label %19
 
-    %is_double = icmp eq i32 %type_tag, 1
+13:                                               ; preds = %0
+  %14 = load ptr, ptr %2, align 8
+  %15 = getelementptr inbounds %struct.Primitive, ptr %14, i32 0, i32 1
+  %16 = load ptr, ptr %15, align 8
+  %17 = load double, ptr %16, align 8
+  %18 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %17)
+  br label %19
 
-    br i1 %is_double, label %handle_double, label %handle_i64
-
-handle_double:
-    %result_double = load double, double* %ptr_value, align 8
-    call i32 (i8*, ...) @printf(i8* @double_fmt, double %result_double)
-    br label %end
-
-handle_i64:
-    %result_i64 = load i64, i64* %ptr_value, align 8
-    call i32 (i8*, ...) @printf(i8* @long_fmt, i64 %result_i64)
-    br label %end
-
-end:
-    ret i32 0;
+19:                                               ; preds = %0, %13, %7
+  %20 = load i32, ptr %1, align 4
+  ret i32 %20
 }
+
+declare ptr @eval() #1
+
+declare i32 @printf(ptr noundef, ...) #1
+
+attributes #0 = { noinline nounwind optnone uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #1 = { "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+
+!llvm.module.flags = !{!0, !1, !2, !3, !4}
+!llvm.ident = !{!5}
+
+!0 = !{i32 1, !"wchar_size", i32 4}
+!1 = !{i32 8, !"PIC Level", i32 2}
+!2 = !{i32 7, !"PIE Level", i32 2}
+!3 = !{i32 7, !"uwtable", i32 2}
+!4 = !{i32 7, !"frame-pointer", i32 2}
+!5 = !{!"Homebrew clang version 17.0.6"}

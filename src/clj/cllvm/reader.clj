@@ -1,5 +1,5 @@
 (ns cllvm.reader
-  (:require [cllvm.ll.core :as ll :refer [->* _i32 _i64 _double type-codes]]
+  (:require [cllvm.ll.core :as ll :refer [->* _ptr _i32 _i64 _double type-codes]]
             [cllvm.util :as util]))
 
 (def var-idx (atom 0))
@@ -27,15 +27,16 @@
 (defn ret-prim [type val]
   (let [prim*-sym (->ptr-sym!)
         type*-sym (->ptr-sym!)
-        val*-sym  (->ptr-sym!)
-        casted*-sym (->ptr-sym!)]
+        address*-sym  (->ptr-sym!)
+        value*-sym (->ptr-sym!)]
     (util/lines->str
       (ll/alloca prim*-sym prim 8)
       (ll/get-element* type*-sym prim prim*-sym [_i32 0] [_i32 0])
       (ll/store type*-sym _i32 (type-codes type))
-      (ll/get-element* val*-sym prim prim*-sym [_i32 0] [_i32 1])
-      (ll/bitcast casted*-sym val*-sym (->* "[8 x i8]") (->* type))
-      (ll/store casted*-sym type val 8)
+      (ll/get-element* address*-sym prim prim*-sym [_i32 0] [_i32 1])
+      (ll/alloca value*-sym type 8)
+      (ll/store value*-sym type val 8)
+      (ll/store address*-sym (->* type) _ptr value*-sym 8)
       (ll/ret prim* prim*-sym))))
 
 (defmethod expr->ir :num [[_ body]]
@@ -53,5 +54,5 @@
      (ll/module ns)
      (ll/source ns)
      (ll/type "TypeTag" "i32")
-     (ll/type "Primitive" "%TypeTag" "[8 x i8]")
+     (ll/type "Primitive" "%TypeTag" "ptr")
      (ll/func prim* "eval" (expr->ir expr)))))

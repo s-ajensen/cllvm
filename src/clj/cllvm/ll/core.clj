@@ -2,6 +2,7 @@
   (:require [cllvm.util :as util]
             [clojure.string :as str]))
 
+(def _ptr "ptr")
 (def _i32 "i32")
 (def _i64 "i64")
 (def _double "double")
@@ -50,8 +51,10 @@
     (str sym " = getelementptr " type ", " (->* type) " " base idxs)))
 
 (defn store
+  ([sym src-type result-type val alignment]
+   (str "store " src-type " " val ", " result-type " " sym (when alignment (align alignment))))
   ([sym type val alignment]
-   (str "store " type " " val ", " (->* type) " " sym (when alignment (align alignment))))
+   (store sym type (->* type) val alignment))
   ([sym type val] (store sym type val nil)))
 
 (defn bitcast [sym target from to]

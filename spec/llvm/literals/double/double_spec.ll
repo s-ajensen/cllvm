@@ -1,7 +1,7 @@
 declare i32 @printf(i8*, ...)
 
 %TypeTag = type { i32 }
-%Primitive = type { %TypeTag, [8 x i8] }
+%Primitive = type { %TypeTag, ptr }
 
 declare %Primitive* @eval() 
 
@@ -19,7 +19,8 @@ entry:
   %ptr_expected = alloca double
   store double 3.14, double* %ptr_expected, align 8
   %expected = load double, double* %ptr_expected, align 8
-  %actual = load double, double* %ptr_value, align 8
+  %ptr_actual = load double*, ptr %ptr_value, align 8
+  %actual = load double, double* %ptr_actual
   
   %should_pass = fcmp ueq double %actual, %expected
   br i1 %should_pass, label %pass, label %fail

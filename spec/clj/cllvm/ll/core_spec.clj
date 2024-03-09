@@ -87,4 +87,26 @@
 
     (it "ret"
       (should= "ret i32 0"
-        (sut/ret _i32 0)))))
+        (sut/ret _i32 0)))
+    
+    (context "def-str" 
+      
+      (it "empty string"
+          (should= (str "%str_0 = alloca [1 x i8], align 1\n"
+                        "store [1 x i8] c\"\\00\", [1 x i8]* %str_0, align 1")
+                   (sut/def-str "%str_0" "")))
+      
+      (it "first string symbol"
+          (should= (str "%str_1 = alloca [1 x i8], align 1\n"
+                        "store [1 x i8] c\"\\00\", [1 x i8]* %str_1, align 1")
+                   (sut/def-str "%str_1" "")))
+
+      (it "nonzero size"
+          (should= (str "%str_0 = alloca [5 x i8], align 1\n"
+                        "store [5 x i8] c\"greg\\00\", [5 x i8]* %str_0, align 1") 
+                   (sut/def-str "%str_0" "greg")))
+      
+      (it "with escape characters"
+          (should= (str "%str_0 = alloca [6 x i8], align 1\n"
+                        "store [6 x i8] c\"gr\\\\eg\\00\", [6 x i8]* %str_0, align 1")
+                   (sut/def-str "%str_0" "gr\\eg"))))))

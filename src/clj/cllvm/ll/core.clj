@@ -11,6 +11,7 @@
   {
    _i64    0
    _double 1
+   "str"   2
    })
 
 (defn module [name]
@@ -62,3 +63,11 @@
 
 (defn ret [type val]
   (str "ret " type " " val))
+
+(defn def-str [sym val]
+  (let [escaped-str (str/escape val char-escape-string)
+        with-quotes-and-terminator (str "\"" escaped-str "\\00\"")
+        str-size (inc (count val))
+        str-type (str "[" str-size " x i8]")]
+    (str (alloca sym str-type 1) "\n"
+         (store sym str-type (str "c" with-quotes-and-terminator) 1))))

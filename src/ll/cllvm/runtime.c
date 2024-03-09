@@ -1,3 +1,5 @@
+// clang -S -emit-llvm runtime.c
+
 #include <stdint.h>
 #include <stdio.h>
 
@@ -12,6 +14,7 @@ Primitive* eval(void);
 
 #define LONG_TAG 0
 #define DOUBLE_TAG 1
+#define STRING_TAG 2
 
 int main() {
   Primitive* output = eval();
@@ -21,6 +24,9 @@ int main() {
       break;
     case DOUBLE_TAG:
       printf("%f\n",*(double*)output->data);
+      break;
+    case STRING_TAG:
+      printf("%s\n",(char*)output->data);
       break;
   }
 }

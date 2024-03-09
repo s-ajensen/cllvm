@@ -23,4 +23,5 @@
 (defn -main []
   (run-test "literals" "long" "19")
   (run-test "literals" "double" "3.14")
+  (run-test "literals" "string" "\"Hello\"")
   (System/exit 0))

@@ -8,8 +8,8 @@ entry:
 %ptr_5 = getelementptr %Primitive, %Primitive* %ptr_4, i32 0, i32 0
 store i32 1, i32* %ptr_5
 %ptr_6 = getelementptr %Primitive, %Primitive* %ptr_4, i32 0, i32 1
-%ptr_7 = alloca double, align 8
-store double 3.14, double* %ptr_7, align 8
-store double* %ptr_7, ptr %ptr_6, align 8
+%val_7 = alloca double, align 8
+store double 3.14, double* %val_7, align 8
+store double* %val_7, ptr %ptr_6, align 8
 ret %Primitive* %ptr_4
 }
